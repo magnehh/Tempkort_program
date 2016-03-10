@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Atmel Studio Solution File, Format Version 11.00
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "Tempkort_program_v1", "Temperaturkort_program_v2\Tempkort_program_v1.cproj", "{C7366C51-BBEE-4A50-8206-1E7FABE2DDAF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|AVR = Debug|AVR
+		Release|AVR = Release|AVR
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C7366C51-BBEE-4A50-8206-1E7FABE2DDAF}.Debug|AVR.ActiveCfg = Debug|AVR
+		{C7366C51-BBEE-4A50-8206-1E7FABE2DDAF}.Debug|AVR.Build.0 = Debug|AVR
+		{C7366C51-BBEE-4A50-8206-1E7FABE2DDAF}.Release|AVR.ActiveCfg = Release|AVR
+		{C7366C51-BBEE-4A50-8206-1E7FABE2DDAF}.Release|AVR.Build.0 = Release|AVR
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
