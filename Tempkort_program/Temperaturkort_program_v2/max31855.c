@@ -1,55 +1,102 @@
-/*
- * max31855.c
- *
- * Created: 10.03.2016 13.39.14
- *  Author: SpaceY
- */ 
+/*************************************************************************
+Title:    MAX31855 SPI library
+Author:   Magne Haneberg <magnehh |at| stud |.| ntnu |.| no>
+Software: AVR-GCC 4.x
+Hardware: ATmega48, ATmega88, ATmega168, ATmega328 
+License:  GNU General Public License 
+          
+DESCRIPTION:
+    The entire string of bytes made available by the MAX31855 is read and returned to the caller as a 32bit word.
 
+LICENSE:
+    Copyright (C) 2016 Magne Haneberg, GNU General Public License Version 3
 
-#define SCK PB7
-#define MISO PB5
-#define MOSI PB6
-#define CS1 PB4
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+                        
+*************************************************************************/
+
+#if defined(__AVR_ATmega48__) || defined(__AVR_ATmega48A__) || defined(__AVR_ATmega48P__) || defined(__AVR_ATmega48PA__) || defined(__AVR_ATmega48PB__) || \
+defined(__AVR_ATmega88__) || defined(__AVR_ATmega88A__) || defined(__AVR_ATmega88P__) || defined(__AVR_ATmega88PA__) || defined(__AVR_ATmega88PB__) || \
+defined(__AVR_ATmega168__) || defined(__AVR_ATmega168A__)|| defined(__AVR_ATmega168P__)|| defined(__AVR_ATmega168PA__) || defined(__AVR_ATmega168PB__) || \
+defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__)
+#define SPI_SPCR SPCR
+#define SPI_SPSR SPSR
+#define SPI_SPDR SPDR
+#define SPI_SPIF SPIF
+#define SPI_SPE SPE
+#define SPI_MSTR MSTR
+#define SPI_DDR DDRB
+#define SPI_PORT PORTB
+#define SPI_SCK PB5
+#define SPI_MISO PB4
+#define SPI_MOSI PB3
+#define SPI_SS PB2
+#endif
 
 #include <avr/io.h>
+#include <util/delay_basic.h>
+#include <inttypes.h>
 
-
-void max31855_init(void){
-	DDRB |= _BV(SCK) | _BV(MISO) | _BV(CS1);
-	DDRB &= ~(_BV(MOSI));
-	SPCR = _BV(SPE) | _BV(MSTR);
+void max31855_init(volatile uint8_t *spi_cs_port, volatile uint8_t *spi_cs_ddr, uint8_t spi_cs_pin_mask){
+	/* Set SPI pins as input/output as desired */
+	SPI_DDR |= _BV(SPI_SCK) | _BV(SPI_MOSI) | _BV(SPI_SS);
+	SPI_DDR &= ~(_BV(SPI_MISO));
+	SPI_PORT |= _BV(SPI_SS);
 	
-	PORTB |= _BV(CS1);	// Set Chip Select line high
+	/* Set chip select lines as outputs */
+	*spi_cs_ddr |= spi_cs_pin_mask;
+	
+	/* Set chip select lines high */
+	*spi_cs_port |= spi_cs_pin_mask;	// Set Chip Select lines high
+
+	/* Enable SPI in hardware */
+	SPI_SPCR = _BV(SPI_SPE) | _BV(SPI_MSTR);
 }
 
 
-uint32_t max31855_get(void){
-	/* Begin read from thermocouple interface IC */
-	PORTB &= ~(_BV(CS1));
+uint32_t max31855_get(volatile uint8_t *spi_cs_port, uint8_t spi_cs_pin){
+	/* Set chip select line of selected slave low */
+	*spi_cs_port &= ~(spi_cs_pin);
+	/* Allow for some settling delay */
+	_delay_loop_1(5);
 	
-	SPDR = 0x00;
-	while(!(SPSR & (1<<SPIF)));
-	uint8_t max_part_1 = SPDR;
+	/* Write one byte to SPI data register to initiate reception */
+	SPI_SPDR = 0x00;
+	/* Wait while transfer not finished */
+	while(!(SPI_SPSR & (1<<SPI_SPIF)));
+	/* Read back received byte from SPI data register */
+	uint8_t max_part_1 = SPI_SPDR;
 	
-	SPDR = 0x00;
-	while(!(SPSR & (1<<SPIF)));
-	uint8_t max_part_2 = SPDR;
+	/* Receive three more bytes */
+	SPI_SPDR = 0x00;
+	while(!(SPI_SPSR & (1<<SPI_SPIF)));
+	uint8_t max_part_2 = SPI_SPDR;
 
-	SPDR = 0x00;
-	while(!(SPSR & (1<<SPIF)));
-	uint8_t max_part_3 = SPDR;
+	SPI_SPDR = 0x00;
+	while(!(SPI_SPSR & (1<<SPI_SPIF)));
+	uint8_t max_part_3 = SPI_SPDR;
 	
-	SPDR = 0x00;
-	while(!(SPSR & (1<<SPIF)));
-	uint8_t max_part_4 = SPDR;
+	SPI_SPDR = 0x00;
+	while(!(SPI_SPSR & (1<<SPI_SPIF)));
+	uint8_t max_part_4 = SPI_SPDR;
 	
-	PORTB |= _BV(CS1);
-	/* End read from thermocouple interface IC */
+	/* Set chip select line of selected slave high */
+	*spi_cs_port |= spi_cs_pin;
 	
+	/* Arrange the four received bytes into a 32bit word */
 	uint32_t result = max_part_1;
 	result = (result << 8) | max_part_2;
 	result = (result << 8) | max_part_3;
 	result = (result << 8) | max_part_4;
 	
+	/* Return 32bit word */
 	return result;
 }

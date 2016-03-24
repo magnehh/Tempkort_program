@@ -5,30 +5,39 @@
  * Author : SpaceY
  */ 
 
-#define F_CPU 11059200UL
-#define UART_BAUD_RATE 57600
+#define F_CPU 8000000UL	// Debugging only!
+#define UART_BAUD_RATE 9600	// Debugging only!
 
 #include <avr/io.h>
 #include <util/delay.h>
-#include <avr/interrupt.h>
+#include <avr/interrupt.h>	// Debugging only!
 #include <stdlib.h>
-#include "uart.h"
+#include "uart.h"	// Debugging only!
 #include "max31855.h"
+
+// #define SPI_DDR_CS DDRC
+// #define SPI_PORT_CS PORTC
+#define SPI_CS1 PC0
+#define SPI_CS2 PC1
 
 int main(void){
 	
-	uart1_init( UART_BAUD_SELECT(UART_BAUD_RATE,F_CPU) );
+	/* Initialize serial port (debugging only!) */
+	uart_init( UART_BAUD_SELECT(UART_BAUD_RATE,F_CPU) );
 	
-	max31855_init();
+	/* Initialize thermocouple interface library */
+	max31855_init(&PORTC,&DDRC,(_BV(SPI_CS1) | _BV(SPI_CS2)));
 	
-	sei();	// Enable interrupts required for UART operation
+	/* Interrupts required for UART operation (debugging only!) */
+	sei();
 	
 	while(1){
-		char buffer[32];	// Needed for UART string transmission
+		/* Circular buffer needed for UART string transmission (debugging only!) */
+		char buffer[7];
 		
 		
 		/* Acquire one sample from sensor IC */
-		uint32_t result = max31855_get();
+		uint32_t result = max31855_get(&PORTC,_BV(SPI_CS2));
 		
 		
 		/* Mask out only what we want to send */
@@ -38,11 +47,11 @@ int main(void){
 		
 		
 		/* Transmit temperature through UART */
-		uart1_puts(ltoa(send_this,buffer,10));
-		uart1_putc('\n');
-		uart1_putc('\r');
+		uart_puts(ltoa(send_this,buffer,10));
+		uart_putc('\n');
+		uart_putc('\r');
 		
-		
-		_delay_ms(10);
+		/* Wait, in order not to overrun debug output */
+		_delay_ms(100);
 	}
 }
