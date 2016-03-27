@@ -75,10 +75,16 @@ void parallel_putc(uint8_t byte){
 	uint8_t data1 = (byte & _BV(1)) << 6;	// Notice: Left shift
 	uint8_t data0 = (byte & _BV(0)) >> 0;
 	
-	PORTD = data7 | data6 | data5 | data4 | data3 | data2 | data1 | data0;
+	uint8_t byteConverted = data7 | data6 | data5 | data4 | data3 | data2 | data1 | data0;	// Combine to one byte
+	
+	while(!(FRSYNC_PORT & (FRAMESYNC_1 | FRAMESYNC_2)));	// Wait for logic high on FrameSync lines
+	
+	PORTD = byteConverted;	// Put data on data lines
+	
+	while(FRSYNC_PORT & (FRAMESYNC_1 | FRAMESYNC_2));	// Wait for logic low on FrameSync lines
 }
 
-void parallel_puts(uint8_t *data, uint8_t length){
+void parallel_puts(volatile uint8_t data[], uint8_t length){
 	for (uint8_t i = 0; i < length; ++i){
 		parallel_putc(data[i]);
 	}

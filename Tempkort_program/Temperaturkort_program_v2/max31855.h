@@ -46,7 +46,7 @@ LICENSE:
  *	@param	spi_cs_pin_mask Mask of pins to be used as chip select lines
  *	@return	none
  */
-void max31855_init(volatile uint8_t*, volatile uint8_t*, uint8_t);
+void max31855_init(volatile uint8_t *spi_cs_port, volatile uint8_t *spi_cs_ddr, uint8_t spi_cs_pin_mask);
 
 
 
@@ -55,7 +55,7 @@ void max31855_init(volatile uint8_t*, volatile uint8_t*, uint8_t);
  *	@param	spi_cs_pin Pin connected to desired chip select line
  *	@return 32bit word received from MAX31855
  */
-uint32_t max31855_get(volatile uint8_t*, uint8_t);
+uint32_t max31855_get(volatile uint8_t *spi_cs_port, uint8_t spi_cs_pin);
 
 
 

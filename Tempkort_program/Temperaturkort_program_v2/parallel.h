@@ -51,14 +51,15 @@ void parallel_init(void);
 /** @brief  Function to write one byte to data lines
  *  @param  char Data to be written
  */
-void parallel_putc(uint8_t);
+void parallel_putc(uint8_t data);
 
 
 
 /** @brief  Function to write a string of bytes to data lines
  *  @param  string Data to be written
+ *  @param  length Length of string
  */
-/*void parallel_puts(uint8_t);*/
+void parallel_puts(volatile uint8_t string[],uint8_t length);
 
 
 
