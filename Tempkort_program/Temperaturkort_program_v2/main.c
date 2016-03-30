@@ -29,8 +29,6 @@ LICENSE:
 
 #include <avr/io.h>
 #include <util/delay.h>
-/*#include <avr/interrupt.h>*/
-/*#include <stdlib.h>*/
 #include "max31855.h"
 #include "parallel.h"
 
@@ -41,7 +39,7 @@ LICENSE:
 
 int main(void){
 	
-	/* Allow voltages to stabilize and warm-up time */
+	/* Allow voltages to stabilize in addition to warm-up time */
 	_delay_ms(500);
 	
 	/* Initialize thermocouple interface library */
@@ -50,16 +48,17 @@ int main(void){
 	/* Initialize parallel interface to rocket controller */
 	parallel_init();
 	
+	/* The following will be executed indefinitely */
 	while(1){
 		
 		/* Acquire one sample from each sensor IC */
 //		uint32_t result_tc_1 = max31855_get(&PORTC,_BV(SPI_CS1));
 		uint32_t result_tc_2 = max31855_get(&PORTC,_BV(SPI_CS2));
 		
-		/* AB AB are sync words for transmitted data */
+		/* AB BA are sync words for transmitted data */
 		uint8_t byteArray[] = {
 			0xAB,
-			0xAB,
+			0xBA,
 // 			result_tc_1 >> 24,
 // 			result_tc_1 >> 16,
 // 			result_tc_1 >> 8,

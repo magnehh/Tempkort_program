@@ -66,6 +66,7 @@ void parallel_init(void){
 }
 
 void parallel_putc(uint8_t byte){
+	/* The data pins are not mapped linearly, therefore a conversion is required */
 	uint8_t data7 = (byte & _BV(7)) >> 3;
 	uint8_t data6 = (byte & _BV(6)) >> 3;
 	uint8_t data5 = (byte & _BV(5)) >> 0;

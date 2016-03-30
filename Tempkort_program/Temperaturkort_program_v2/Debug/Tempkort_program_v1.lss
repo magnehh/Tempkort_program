@@ -1,0 +1,643 @@
+
+Tempkort_program_v1.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .data         00000000  00800100  00800100  00000344  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  1 .text         000002d0  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .bss          00000045  00800100  00800100  00000344  2**0
+                  ALLOC
+  3 .comment      00000030  00000000  00000000  00000344  2**0
+                  CONTENTS, READONLY
+  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000374  2**2
+                  CONTENTS, READONLY
+  5 .debug_aranges 000000c8  00000000  00000000  000003b4  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_info   00000843  00000000  00000000  0000047c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_abbrev 00000472  00000000  00000000  00000cbf  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_line   00000692  00000000  00000000  00001131  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_frame  000001a0  00000000  00000000  000017c4  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_str    000003ec  00000000  00000000  00001964  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_loc    00000725  00000000  00000000  00001d50  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_ranges 000000a0  00000000  00000000  00002475  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	33 c0       	rjmp	.+102    	; 0x68 <__ctors_end>
+   2:	00 00       	nop
+   4:	41 c0       	rjmp	.+130    	; 0x88 <__bad_interrupt>
+   6:	00 00       	nop
+   8:	3f c0       	rjmp	.+126    	; 0x88 <__bad_interrupt>
+   a:	00 00       	nop
+   c:	3d c0       	rjmp	.+122    	; 0x88 <__bad_interrupt>
+   e:	00 00       	nop
+  10:	3b c0       	rjmp	.+118    	; 0x88 <__bad_interrupt>
+  12:	00 00       	nop
+  14:	39 c0       	rjmp	.+114    	; 0x88 <__bad_interrupt>
+  16:	00 00       	nop
+  18:	37 c0       	rjmp	.+110    	; 0x88 <__bad_interrupt>
+  1a:	00 00       	nop
+  1c:	35 c0       	rjmp	.+106    	; 0x88 <__bad_interrupt>
+  1e:	00 00       	nop
+  20:	33 c0       	rjmp	.+102    	; 0x88 <__bad_interrupt>
+  22:	00 00       	nop
+  24:	31 c0       	rjmp	.+98     	; 0x88 <__bad_interrupt>
+  26:	00 00       	nop
+  28:	2f c0       	rjmp	.+94     	; 0x88 <__bad_interrupt>
+  2a:	00 00       	nop
+  2c:	2d c0       	rjmp	.+90     	; 0x88 <__bad_interrupt>
+  2e:	00 00       	nop
+  30:	2b c0       	rjmp	.+86     	; 0x88 <__bad_interrupt>
+  32:	00 00       	nop
+  34:	29 c0       	rjmp	.+82     	; 0x88 <__bad_interrupt>
+  36:	00 00       	nop
+  38:	27 c0       	rjmp	.+78     	; 0x88 <__bad_interrupt>
+  3a:	00 00       	nop
+  3c:	25 c0       	rjmp	.+74     	; 0x88 <__bad_interrupt>
+  3e:	00 00       	nop
+  40:	23 c0       	rjmp	.+70     	; 0x88 <__bad_interrupt>
+  42:	00 00       	nop
+  44:	21 c0       	rjmp	.+66     	; 0x88 <__bad_interrupt>
+  46:	00 00       	nop
+  48:	e9 c0       	rjmp	.+466    	; 0x21c <__vector_18>
+  4a:	00 00       	nop
+  4c:	15 c1       	rjmp	.+554    	; 0x278 <__vector_19>
+  4e:	00 00       	nop
+  50:	1b c0       	rjmp	.+54     	; 0x88 <__bad_interrupt>
+  52:	00 00       	nop
+  54:	19 c0       	rjmp	.+50     	; 0x88 <__bad_interrupt>
+  56:	00 00       	nop
+  58:	17 c0       	rjmp	.+46     	; 0x88 <__bad_interrupt>
+  5a:	00 00       	nop
+  5c:	15 c0       	rjmp	.+42     	; 0x88 <__bad_interrupt>
+  5e:	00 00       	nop
+  60:	13 c0       	rjmp	.+38     	; 0x88 <__bad_interrupt>
+  62:	00 00       	nop
+  64:	11 c0       	rjmp	.+34     	; 0x88 <__bad_interrupt>
+	...
+
+00000068 <__ctors_end>:
+  68:	11 24       	eor	r1, r1
+  6a:	1f be       	out	0x3f, r1	; 63
+  6c:	cf ef       	ldi	r28, 0xFF	; 255
+  6e:	d8 e0       	ldi	r29, 0x08	; 8
+  70:	de bf       	out	0x3e, r29	; 62
+  72:	cd bf       	out	0x3d, r28	; 61
+
+00000074 <__do_clear_bss>:
+  74:	21 e0       	ldi	r18, 0x01	; 1
+  76:	a0 e0       	ldi	r26, 0x00	; 0
+  78:	b1 e0       	ldi	r27, 0x01	; 1
+  7a:	01 c0       	rjmp	.+2      	; 0x7e <.do_clear_bss_start>
+
+0000007c <.do_clear_bss_loop>:
+  7c:	1d 92       	st	X+, r1
+
+0000007e <.do_clear_bss_start>:
+  7e:	a5 34       	cpi	r26, 0x45	; 69
+  80:	b2 07       	cpc	r27, r18
+  82:	e1 f7       	brne	.-8      	; 0x7c <.do_clear_bss_loop>
+  84:	45 d0       	rcall	.+138    	; 0x110 <main>
+  86:	22 c1       	rjmp	.+580    	; 0x2cc <_exit>
+
+00000088 <__bad_interrupt>:
+  88:	bb cf       	rjmp	.-138    	; 0x0 <__vectors>
+
+0000008a <max31855_init>:
+
+#include <avr/io.h>
+#include <util/delay_basic.h>
+#include <inttypes.h>
+
+void max31855_init(volatile uint8_t *spi_cs_port, volatile uint8_t *spi_cs_ddr, uint8_t spi_cs_pin_mask){
+  8a:	fc 01       	movw	r30, r24
+	/* Set SPI pins as input/output as desired */
+	SPI_DDR |= _BV(SPI_SCK) | _BV(SPI_MOSI) | _BV(SPI_SS);
+  8c:	94 b1       	in	r25, 0x04	; 4
+  8e:	9c 62       	ori	r25, 0x2C	; 44
+  90:	94 b9       	out	0x04, r25	; 4
+	SPI_DDR &= ~(_BV(SPI_MISO));
+  92:	24 98       	cbi	0x04, 4	; 4
+	SPI_PORT |= _BV(SPI_SS);
+  94:	2a 9a       	sbi	0x05, 2	; 5
+	
+	/* Set chip select lines as outputs */
+	*spi_cs_ddr |= spi_cs_pin_mask;
+  96:	db 01       	movw	r26, r22
+  98:	9c 91       	ld	r25, X
+  9a:	94 2b       	or	r25, r20
+  9c:	9c 93       	st	X, r25
+	
+	/* Set chip select lines high */
+	*spi_cs_port |= spi_cs_pin_mask;	// Set Chip Select lines high
+  9e:	80 81       	ld	r24, Z
+  a0:	48 2b       	or	r20, r24
+  a2:	40 83       	st	Z, r20
+
+	/* Enable SPI in hardware */
+	SPI_SPCR = _BV(SPI_SPE) | _BV(SPI_MSTR);
+  a4:	80 e5       	ldi	r24, 0x50	; 80
+  a6:	8c bd       	out	0x2c, r24	; 44
+  a8:	08 95       	ret
+
+000000aa <max31855_get>:
+}
+
+
+uint32_t max31855_get(volatile uint8_t *spi_cs_port, uint8_t spi_cs_pin){
+  aa:	fc 01       	movw	r30, r24
+  ac:	86 2f       	mov	r24, r22
+	/* Set chip select line of selected slave low */
+	*spi_cs_port &= ~(spi_cs_pin);
+  ae:	20 81       	ld	r18, Z
+  b0:	96 2f       	mov	r25, r22
+  b2:	90 95       	com	r25
+  b4:	92 23       	and	r25, r18
+  b6:	90 83       	st	Z, r25
+    can be achieved.
+*/
+void
+_delay_loop_1(uint8_t __count)
+{
+	__asm__ volatile (
+  b8:	95 e0       	ldi	r25, 0x05	; 5
+  ba:	9a 95       	dec	r25
+  bc:	f1 f7       	brne	.-4      	; 0xba <max31855_get+0x10>
+	/* Allow for some settling delay */
+	_delay_loop_1(5);
+	
+	/* Write one byte to SPI data register to initiate reception */
+	SPI_SPDR = 0x00;
+  be:	1e bc       	out	0x2e, r1	; 46
+	/* Wait while transfer not finished */
+	while(!(SPI_SPSR & (1<<SPI_SPIF)));
+  c0:	0d b4       	in	r0, 0x2d	; 45
+  c2:	07 fe       	sbrs	r0, 7
+  c4:	fd cf       	rjmp	.-6      	; 0xc0 <max31855_get+0x16>
+	/* Read back received byte from SPI data register */
+	uint8_t max_part_1 = SPI_SPDR;
+  c6:	4e b5       	in	r20, 0x2e	; 46
+	
+	/* Receive three more bytes */
+	SPI_SPDR = 0x00;
+  c8:	1e bc       	out	0x2e, r1	; 46
+	while(!(SPI_SPSR & (1<<SPI_SPIF)));
+  ca:	0d b4       	in	r0, 0x2d	; 45
+  cc:	07 fe       	sbrs	r0, 7
+  ce:	fd cf       	rjmp	.-6      	; 0xca <max31855_get+0x20>
+	uint8_t max_part_2 = SPI_SPDR;
+  d0:	6e b5       	in	r22, 0x2e	; 46
+
+	SPI_SPDR = 0x00;
+  d2:	1e bc       	out	0x2e, r1	; 46
+	while(!(SPI_SPSR & (1<<SPI_SPIF)));
+  d4:	0d b4       	in	r0, 0x2d	; 45
+  d6:	07 fe       	sbrs	r0, 7
+  d8:	fd cf       	rjmp	.-6      	; 0xd4 <max31855_get+0x2a>
+	uint8_t max_part_3 = SPI_SPDR;
+  da:	3e b5       	in	r19, 0x2e	; 46
+	
+	SPI_SPDR = 0x00;
+  dc:	1e bc       	out	0x2e, r1	; 46
+	while(!(SPI_SPSR & (1<<SPI_SPIF)));
+  de:	0d b4       	in	r0, 0x2d	; 45
+  e0:	07 fe       	sbrs	r0, 7
+  e2:	fd cf       	rjmp	.-6      	; 0xde <max31855_get+0x34>
+	uint8_t max_part_4 = SPI_SPDR;
+  e4:	2e b5       	in	r18, 0x2e	; 46
+	
+	/* Set chip select line of selected slave high */
+	*spi_cs_port |= spi_cs_pin;
+  e6:	90 81       	ld	r25, Z
+  e8:	89 2b       	or	r24, r25
+  ea:	80 83       	st	Z, r24
+	
+	/* Arrange the four received bytes into a 32bit word */
+	uint32_t result = max_part_1;
+	result = (result << 8) | max_part_2;
+  ec:	86 2f       	mov	r24, r22
+  ee:	90 e0       	ldi	r25, 0x00	; 0
+  f0:	a0 e0       	ldi	r26, 0x00	; 0
+  f2:	b0 e0       	ldi	r27, 0x00	; 0
+  f4:	94 2b       	or	r25, r20
+	result = (result << 8) | max_part_3;
+  f6:	ba 2f       	mov	r27, r26
+  f8:	a9 2f       	mov	r26, r25
+  fa:	98 2f       	mov	r25, r24
+  fc:	88 27       	eor	r24, r24
+  fe:	83 2b       	or	r24, r19
+	result = (result << 8) | max_part_4;
+ 100:	ba 2f       	mov	r27, r26
+ 102:	a9 2f       	mov	r26, r25
+ 104:	98 2f       	mov	r25, r24
+ 106:	88 27       	eor	r24, r24
+ 108:	bc 01       	movw	r22, r24
+ 10a:	cd 01       	movw	r24, r26
+ 10c:	62 2b       	or	r22, r18
+	
+	/* Return 32bit word */
+	return result;
+ 10e:	08 95       	ret
+
+00000110 <main>:
+#define SPI_CS_DDR DDRC
+#define SPI_CS_PORT PORTC
+#define SPI_CS1 PC0
+#define SPI_CS2 PC1
+
+int main(void){
+ 110:	cf 93       	push	r28
+ 112:	df 93       	push	r29
+ 114:	00 d0       	rcall	.+0      	; 0x116 <main+0x6>
+ 116:	00 d0       	rcall	.+0      	; 0x118 <main+0x8>
+ 118:	00 d0       	rcall	.+0      	; 0x11a <main+0xa>
+ 11a:	cd b7       	in	r28, 0x3d	; 61
+ 11c:	de b7       	in	r29, 0x3e	; 62
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+ 11e:	2f ef       	ldi	r18, 0xFF	; 255
+ 120:	84 e3       	ldi	r24, 0x34	; 52
+ 122:	9c e0       	ldi	r25, 0x0C	; 12
+ 124:	21 50       	subi	r18, 0x01	; 1
+ 126:	80 40       	sbci	r24, 0x00	; 0
+ 128:	90 40       	sbci	r25, 0x00	; 0
+ 12a:	e1 f7       	brne	.-8      	; 0x124 <main+0x14>
+ 12c:	00 c0       	rjmp	.+0      	; 0x12e <main+0x1e>
+ 12e:	00 00       	nop
+	
+	/* Allow voltages to stabilize in addition to warm-up time */
+	_delay_ms(500);
+	
+	/* Initialize thermocouple interface library */
+	max31855_init(&SPI_CS_PORT,&SPI_CS_DDR,(_BV(SPI_CS1) | _BV(SPI_CS2)));
+ 130:	43 e0       	ldi	r20, 0x03	; 3
+ 132:	67 e2       	ldi	r22, 0x27	; 39
+ 134:	70 e0       	ldi	r23, 0x00	; 0
+ 136:	88 e2       	ldi	r24, 0x28	; 40
+ 138:	90 e0       	ldi	r25, 0x00	; 0
+ 13a:	a7 df       	rcall	.-178    	; 0x8a <max31855_init>
+	
+	/* Initialize parallel interface to rocket controller */
+	parallel_init();
+ 13c:	11 d0       	rcall	.+34     	; 0x160 <parallel_init>
+		/* Acquire one sample from each sensor IC */
+//		uint32_t result_tc_1 = max31855_get(&PORTC,_BV(SPI_CS1));
+		uint32_t result_tc_2 = max31855_get(&PORTC,_BV(SPI_CS2));
+		
+		/* AB BA are sync words for transmitted data */
+		uint8_t byteArray[] = {
+ 13e:	0b ea       	ldi	r16, 0xAB	; 171
+ 140:	1a eb       	ldi	r17, 0xBA	; 186
+	/* The following will be executed indefinitely */
+	while(1){
+		
+		/* Acquire one sample from each sensor IC */
+//		uint32_t result_tc_1 = max31855_get(&PORTC,_BV(SPI_CS1));
+		uint32_t result_tc_2 = max31855_get(&PORTC,_BV(SPI_CS2));
+ 142:	62 e0       	ldi	r22, 0x02	; 2
+ 144:	88 e2       	ldi	r24, 0x28	; 40
+ 146:	90 e0       	ldi	r25, 0x00	; 0
+ 148:	b0 df       	rcall	.-160    	; 0xaa <max31855_get>
+		
+		/* AB BA are sync words for transmitted data */
+		uint8_t byteArray[] = {
+ 14a:	09 83       	std	Y+1, r16	; 0x01
+ 14c:	1a 83       	std	Y+2, r17	; 0x02
+ 14e:	9b 83       	std	Y+3, r25	; 0x03
+ 150:	8c 83       	std	Y+4, r24	; 0x04
+ 152:	7d 83       	std	Y+5, r23	; 0x05
+ 154:	6e 83       	std	Y+6, r22	; 0x06
+			result_tc_2 >> 8,
+			result_tc_2
+		};
+		
+		/* This function writes a given number of bytes to the rocket controller */
+		parallel_puts(byteArray,6);
+ 156:	66 e0       	ldi	r22, 0x06	; 6
+ 158:	ce 01       	movw	r24, r28
+ 15a:	01 96       	adiw	r24, 0x01	; 1
+ 15c:	47 d0       	rcall	.+142    	; 0x1ec <parallel_puts>
+		
+	}
+ 15e:	f1 cf       	rjmp	.-30     	; 0x142 <main+0x32>
+
+00000160 <parallel_init>:
+#include "parallel.h"
+
+
+
+void parallel_init(void){
+	FRSYNC_DDR &= ~(_BV(FRAMESYNC_1) | _BV(FRAMESYNC_2));	// Set FRAMESYNC pins as inputs...
+ 160:	84 b1       	in	r24, 0x04	; 4
+ 162:	8c 7f       	andi	r24, 0xFC	; 252
+ 164:	84 b9       	out	0x04, r24	; 4
+	FRSYNC_PORT &= ~(_BV(FRAMESYNC_1) | _BV(FRAMESYNC_2));	// ... without internal pullups
+ 166:	85 b1       	in	r24, 0x05	; 5
+ 168:	8c 7f       	andi	r24, 0xFC	; 252
+ 16a:	85 b9       	out	0x05, r24	; 5
+	
+	DDRD = 0xFF;	// All data pins outputs
+ 16c:	8f ef       	ldi	r24, 0xFF	; 255
+ 16e:	8a b9       	out	0x0a, r24	; 10
+	PORTD = 0x00;	// Initial state of data pins 0x00
+ 170:	1b b8       	out	0x0b, r1	; 11
+ 172:	08 95       	ret
+
+00000174 <parallel_putc>:
+}
+
+void parallel_putc(uint8_t byte){
+ 174:	48 2f       	mov	r20, r24
+ 176:	41 72       	andi	r20, 0x21	; 33
+	uint8_t data7 = (byte & _BV(7)) >> 3;
+	uint8_t data6 = (byte & _BV(6)) >> 3;
+	uint8_t data5 = (byte & _BV(5)) >> 0;
+	uint8_t data4 = (byte & _BV(4)) >> 2;
+	uint8_t data3 = (byte & _BV(3)) << 3;	// Notice: Left shift
+ 178:	28 2f       	mov	r18, r24
+ 17a:	28 70       	andi	r18, 0x08	; 8
+ 17c:	22 0f       	add	r18, r18
+ 17e:	22 0f       	add	r18, r18
+ 180:	22 0f       	add	r18, r18
+ 182:	24 2b       	or	r18, r20
+	uint8_t data2 = (byte & _BV(2)) >> 1;
+	uint8_t data1 = (byte & _BV(1)) << 6;	// Notice: Left shift
+ 184:	98 2f       	mov	r25, r24
+ 186:	92 70       	andi	r25, 0x02	; 2
+ 188:	92 95       	swap	r25
+ 18a:	99 0f       	add	r25, r25
+ 18c:	99 0f       	add	r25, r25
+ 18e:	90 7c       	andi	r25, 0xC0	; 192
+ 190:	42 2f       	mov	r20, r18
+ 192:	49 2b       	or	r20, r25
+	DDRD = 0xFF;	// All data pins outputs
+	PORTD = 0x00;	// Initial state of data pins 0x00
+}
+
+void parallel_putc(uint8_t byte){
+	uint8_t data7 = (byte & _BV(7)) >> 3;
+ 194:	98 2f       	mov	r25, r24
+ 196:	90 78       	andi	r25, 0x80	; 128
+ 198:	29 2f       	mov	r18, r25
+ 19a:	30 e0       	ldi	r19, 0x00	; 0
+ 19c:	35 95       	asr	r19
+ 19e:	27 95       	ror	r18
+ 1a0:	35 95       	asr	r19
+ 1a2:	27 95       	ror	r18
+ 1a4:	35 95       	asr	r19
+ 1a6:	27 95       	ror	r18
+ 1a8:	24 2b       	or	r18, r20
+	uint8_t data6 = (byte & _BV(6)) >> 3;
+ 1aa:	98 2f       	mov	r25, r24
+ 1ac:	90 74       	andi	r25, 0x40	; 64
+ 1ae:	49 2f       	mov	r20, r25
+ 1b0:	50 e0       	ldi	r21, 0x00	; 0
+ 1b2:	55 95       	asr	r21
+ 1b4:	47 95       	ror	r20
+ 1b6:	55 95       	asr	r21
+ 1b8:	47 95       	ror	r20
+ 1ba:	55 95       	asr	r21
+ 1bc:	47 95       	ror	r20
+ 1be:	42 2b       	or	r20, r18
+	uint8_t data5 = (byte & _BV(5)) >> 0;
+	uint8_t data4 = (byte & _BV(4)) >> 2;
+ 1c0:	98 2f       	mov	r25, r24
+ 1c2:	90 71       	andi	r25, 0x10	; 16
+ 1c4:	29 2f       	mov	r18, r25
+ 1c6:	30 e0       	ldi	r19, 0x00	; 0
+ 1c8:	35 95       	asr	r19
+ 1ca:	27 95       	ror	r18
+ 1cc:	35 95       	asr	r19
+ 1ce:	27 95       	ror	r18
+ 1d0:	24 2b       	or	r18, r20
+	uint8_t data3 = (byte & _BV(3)) << 3;	// Notice: Left shift
+	uint8_t data2 = (byte & _BV(2)) >> 1;
+ 1d2:	98 2f       	mov	r25, r24
+ 1d4:	94 70       	andi	r25, 0x04	; 4
+ 1d6:	89 2f       	mov	r24, r25
+ 1d8:	90 e0       	ldi	r25, 0x00	; 0
+ 1da:	95 95       	asr	r25
+ 1dc:	87 95       	ror	r24
+	uint8_t data1 = (byte & _BV(1)) << 6;	// Notice: Left shift
+	uint8_t data0 = (byte & _BV(0)) >> 0;
+	
+	uint8_t byteConverted = data7 | data6 | data5 | data4 | data3 | data2 | data1 | data0;	// Combine to one byte
+ 1de:	82 2b       	or	r24, r18
+	
+	while(!(FRSYNC_PORT & (FRAMESYNC_1 | FRAMESYNC_2)));	// Wait for logic high on FrameSync lines
+ 1e0:	28 9b       	sbis	0x05, 0	; 5
+ 1e2:	fe cf       	rjmp	.-4      	; 0x1e0 <parallel_putc+0x6c>
+	
+	PORTD = byteConverted;	// Put data on data lines
+ 1e4:	8b b9       	out	0x0b, r24	; 11
+	
+	while(FRSYNC_PORT & (FRAMESYNC_1 | FRAMESYNC_2));	// Wait for logic low on FrameSync lines
+ 1e6:	28 99       	sbic	0x05, 0	; 5
+ 1e8:	fe cf       	rjmp	.-4      	; 0x1e6 <parallel_putc+0x72>
+}
+ 1ea:	08 95       	ret
+
+000001ec <parallel_puts>:
+
+void parallel_puts(volatile uint8_t data[], uint8_t length){
+ 1ec:	0f 93       	push	r16
+ 1ee:	1f 93       	push	r17
+ 1f0:	cf 93       	push	r28
+ 1f2:	df 93       	push	r29
+	for (uint8_t i = 0; i < length; ++i){
+ 1f4:	66 23       	and	r22, r22
+ 1f6:	69 f0       	breq	.+26     	; 0x212 <parallel_puts+0x26>
+ 1f8:	ec 01       	movw	r28, r24
+ 1fa:	61 50       	subi	r22, 0x01	; 1
+ 1fc:	06 2f       	mov	r16, r22
+ 1fe:	10 e0       	ldi	r17, 0x00	; 0
+ 200:	0f 5f       	subi	r16, 0xFF	; 255
+ 202:	1f 4f       	sbci	r17, 0xFF	; 255
+ 204:	08 0f       	add	r16, r24
+ 206:	19 1f       	adc	r17, r25
+		parallel_putc(data[i]);
+ 208:	89 91       	ld	r24, Y+
+ 20a:	b4 df       	rcall	.-152    	; 0x174 <parallel_putc>
+	
+	while(FRSYNC_PORT & (FRAMESYNC_1 | FRAMESYNC_2));	// Wait for logic low on FrameSync lines
+}
+
+void parallel_puts(volatile uint8_t data[], uint8_t length){
+	for (uint8_t i = 0; i < length; ++i){
+ 20c:	c0 17       	cp	r28, r16
+ 20e:	d1 07       	cpc	r29, r17
+ 210:	d9 f7       	brne	.-10     	; 0x208 <parallel_puts+0x1c>
+		parallel_putc(data[i]);
+	}
+ 212:	df 91       	pop	r29
+ 214:	cf 91       	pop	r28
+ 216:	1f 91       	pop	r17
+ 218:	0f 91       	pop	r16
+ 21a:	08 95       	ret
+
+0000021c <__vector_18>:
+ISR (UART0_RECEIVE_INTERRUPT)	
+/*************************************************************************
+Function: UART Receive Complete interrupt
+Purpose:  called when the UART has received a character
+**************************************************************************/
+{
+ 21c:	1f 92       	push	r1
+ 21e:	0f 92       	push	r0
+ 220:	0f b6       	in	r0, 0x3f	; 63
+ 222:	0f 92       	push	r0
+ 224:	11 24       	eor	r1, r1
+ 226:	2f 93       	push	r18
+ 228:	8f 93       	push	r24
+ 22a:	9f 93       	push	r25
+ 22c:	ef 93       	push	r30
+ 22e:	ff 93       	push	r31
+    unsigned char usr;
+    unsigned char lastRxError;
+ 
+ 
+    /* read UART status register and UART data register */
+    usr  = UART0_STATUS;
+ 230:	80 91 c0 00 	lds	r24, 0x00C0
+    data = UART0_DATA;
+ 234:	20 91 c6 00 	lds	r18, 0x00C6
+    
+    /* get FEn (Frame Error) DORn (Data OverRun) UPEn (USART Parity Error) bits */
+#if defined(FE) && defined(DOR) && defined(UPE)
+    lastRxError = usr & (_BV(FE)|_BV(DOR)|_BV(UPE) );
+#elif defined(FE0) && defined(DOR0) && defined(UPE0)
+    lastRxError = usr & (_BV(FE0)|_BV(DOR0)|_BV(UPE0) );
+ 238:	8c 71       	andi	r24, 0x1C	; 28
+#elif defined(FE) && defined(DOR)
+    lastRxError = usr & (_BV(FE)|_BV(DOR) );
+#endif
+
+    /* calculate buffer index */ 
+    tmphead = ( UART_RxHead + 1) & UART_RX_BUFFER_MASK;
+ 23a:	e0 91 02 01 	lds	r30, 0x0102
+ 23e:	ef 5f       	subi	r30, 0xFF	; 255
+ 240:	ef 71       	andi	r30, 0x1F	; 31
+    
+    if ( tmphead == UART_RxTail ) {
+ 242:	90 91 01 01 	lds	r25, 0x0101
+ 246:	e9 17       	cp	r30, r25
+ 248:	39 f0       	breq	.+14     	; 0x258 <__vector_18+0x3c>
+        /* error: receive buffer overflow */
+        lastRxError = UART_BUFFER_OVERFLOW >> 8;
+    }else{
+        /* store new index */
+        UART_RxHead = tmphead;
+ 24a:	e0 93 02 01 	sts	0x0102, r30
+        /* store received data in buffer */
+        UART_RxBuf[tmphead] = data;
+ 24e:	f0 e0       	ldi	r31, 0x00	; 0
+ 250:	eb 5f       	subi	r30, 0xFB	; 251
+ 252:	fe 4f       	sbci	r31, 0xFE	; 254
+ 254:	20 83       	st	Z, r18
+ 256:	01 c0       	rjmp	.+2      	; 0x25a <__vector_18+0x3e>
+    /* calculate buffer index */ 
+    tmphead = ( UART_RxHead + 1) & UART_RX_BUFFER_MASK;
+    
+    if ( tmphead == UART_RxTail ) {
+        /* error: receive buffer overflow */
+        lastRxError = UART_BUFFER_OVERFLOW >> 8;
+ 258:	82 e0       	ldi	r24, 0x02	; 2
+        /* store new index */
+        UART_RxHead = tmphead;
+        /* store received data in buffer */
+        UART_RxBuf[tmphead] = data;
+    }
+    UART_LastRxError |= lastRxError;   
+ 25a:	90 91 00 01 	lds	r25, 0x0100
+ 25e:	89 2b       	or	r24, r25
+ 260:	80 93 00 01 	sts	0x0100, r24
+}
+ 264:	ff 91       	pop	r31
+ 266:	ef 91       	pop	r30
+ 268:	9f 91       	pop	r25
+ 26a:	8f 91       	pop	r24
+ 26c:	2f 91       	pop	r18
+ 26e:	0f 90       	pop	r0
+ 270:	0f be       	out	0x3f, r0	; 63
+ 272:	0f 90       	pop	r0
+ 274:	1f 90       	pop	r1
+ 276:	18 95       	reti
+
+00000278 <__vector_19>:
+ISR (UART0_TRANSMIT_INTERRUPT)
+/*************************************************************************
+Function: UART Data Register Empty interrupt
+Purpose:  called when the UART is ready to transmit the next byte
+**************************************************************************/
+{
+ 278:	1f 92       	push	r1
+ 27a:	0f 92       	push	r0
+ 27c:	0f b6       	in	r0, 0x3f	; 63
+ 27e:	0f 92       	push	r0
+ 280:	11 24       	eor	r1, r1
+ 282:	8f 93       	push	r24
+ 284:	9f 93       	push	r25
+ 286:	ef 93       	push	r30
+ 288:	ff 93       	push	r31
+    unsigned char tmptail;
+
+    
+    if ( UART_TxHead != UART_TxTail) {
+ 28a:	90 91 04 01 	lds	r25, 0x0104
+ 28e:	80 91 03 01 	lds	r24, 0x0103
+ 292:	98 17       	cp	r25, r24
+ 294:	69 f0       	breq	.+26     	; 0x2b0 <__vector_19+0x38>
+        /* calculate and store new buffer index */
+        tmptail = (UART_TxTail + 1) & UART_TX_BUFFER_MASK;
+ 296:	e0 91 03 01 	lds	r30, 0x0103
+ 29a:	ef 5f       	subi	r30, 0xFF	; 255
+ 29c:	ef 71       	andi	r30, 0x1F	; 31
+        UART_TxTail = tmptail;
+ 29e:	e0 93 03 01 	sts	0x0103, r30
+        /* get one byte from buffer and write it to UART */
+        UART0_DATA = UART_TxBuf[tmptail];  /* start transmission */
+ 2a2:	f0 e0       	ldi	r31, 0x00	; 0
+ 2a4:	eb 5d       	subi	r30, 0xDB	; 219
+ 2a6:	fe 4f       	sbci	r31, 0xFE	; 254
+ 2a8:	80 81       	ld	r24, Z
+ 2aa:	80 93 c6 00 	sts	0x00C6, r24
+ 2ae:	05 c0       	rjmp	.+10     	; 0x2ba <__vector_19+0x42>
+    }else{
+        /* tx buffer empty, disable UDRE interrupt */
+        UART0_CONTROL &= ~_BV(UART0_UDRIE);
+ 2b0:	e1 ec       	ldi	r30, 0xC1	; 193
+ 2b2:	f0 e0       	ldi	r31, 0x00	; 0
+ 2b4:	80 81       	ld	r24, Z
+ 2b6:	8f 7d       	andi	r24, 0xDF	; 223
+ 2b8:	80 83       	st	Z, r24
+    }
+}
+ 2ba:	ff 91       	pop	r31
+ 2bc:	ef 91       	pop	r30
+ 2be:	9f 91       	pop	r25
+ 2c0:	8f 91       	pop	r24
+ 2c2:	0f 90       	pop	r0
+ 2c4:	0f be       	out	0x3f, r0	; 63
+ 2c6:	0f 90       	pop	r0
+ 2c8:	1f 90       	pop	r1
+ 2ca:	18 95       	reti
+
+000002cc <_exit>:
+ 2cc:	f8 94       	cli
+
+000002ce <__stop_program>:
+ 2ce:	ff cf       	rjmp	.-2      	; 0x2ce <__stop_program>
