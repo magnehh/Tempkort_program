@@ -25,7 +25,6 @@ LICENSE:
 *************************************************************************/
 
 #define F_CPU 8000000UL
-//#define FRSYNC_ON_PORT_B
 
 #include <avr/io.h>
 #include <util/delay.h>
@@ -52,17 +51,17 @@ int main(void){
 	while(1){
 		
 		/* Acquire one sample from each sensor IC */
-//		uint32_t result_tc_1 = max31855_get(&PORTC,_BV(SPI_CS1));
+		uint32_t result_tc_1 = max31855_get(&PORTC,_BV(SPI_CS1));
 		uint32_t result_tc_2 = max31855_get(&PORTC,_BV(SPI_CS2));
 		
-		/* AB BA are sync words for transmitted data */
+		/* 42 42 are sync words for transmitted data */
 		uint8_t byteArray[] = {
-			0xAB,
-			0xBA,
-// 			result_tc_1 >> 24,
-// 			result_tc_1 >> 16,
-// 			result_tc_1 >> 8,
-// 			result_tc_1,
+			0x42,
+			0x42,
+			result_tc_1 >> 24,
+			result_tc_1 >> 16,
+			result_tc_1 >> 8,
+			result_tc_1,
 			result_tc_2 >> 24,
 			result_tc_2 >> 16,
 			result_tc_2 >> 8,
@@ -70,7 +69,7 @@ int main(void){
 		};
 		
 		/* This function writes a given number of bytes to the rocket controller */
-		parallel_puts(byteArray,6);
+		parallel_puts(byteArray,10);
 		
 	}
 }
