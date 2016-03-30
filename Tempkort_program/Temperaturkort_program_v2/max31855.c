@@ -27,18 +27,18 @@ LICENSE:
 defined(__AVR_ATmega88__) || defined(__AVR_ATmega88A__) || defined(__AVR_ATmega88P__) || defined(__AVR_ATmega88PA__) || defined(__AVR_ATmega88PB__) || \
 defined(__AVR_ATmega168__) || defined(__AVR_ATmega168A__)|| defined(__AVR_ATmega168P__)|| defined(__AVR_ATmega168PA__) || defined(__AVR_ATmega168PB__) || \
 defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__)
-#define SPI_SPCR SPCR
-#define SPI_SPSR SPSR
-#define SPI_SPDR SPDR
-#define SPI_SPIF SPIF
-#define SPI_SPE SPE
-#define SPI_MSTR MSTR
-#define SPI_DDR DDRB
-#define SPI_PORT PORTB
-#define SPI_SCK PB5
-#define SPI_MISO PB4
-#define SPI_MOSI PB3
-#define SPI_SS PB2
+	#define SPI_SPCR SPCR
+	#define SPI_SPSR SPSR
+	#define SPI_SPDR SPDR
+	#define SPI_SPIF SPIF
+	#define SPI_SPE SPE
+	#define SPI_MSTR MSTR
+	#define SPI_DDR DDRB
+	#define SPI_PORT PORTB
+	#define SPI_SCK PB5
+	#define SPI_MISO PB4
+	#define SPI_MOSI PB3
+	#define SPI_SS PB2
 #endif
 
 #include <avr/io.h>

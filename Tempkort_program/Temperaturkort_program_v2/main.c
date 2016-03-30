@@ -24,7 +24,7 @@ LICENSE:
                         
 *************************************************************************/
 
-#define F_CPU 8000000UL
+#define F_CPU 1000000UL
 
 #include <avr/io.h>
 #include <util/delay.h>
@@ -38,21 +38,23 @@ LICENSE:
 
 int main(void){
 	
+	/* Initialize parallel interface to rocket controller */
+	/* This needs to be done early to avoid drawing excessive current through
+	the internal protection zeners, due to the 100k pullups to 5V */
+	parallel_init();
+		
 	/* Allow voltages to stabilize in addition to warm-up time */
 	_delay_ms(500);
 	
 	/* Initialize thermocouple interface library */
 	max31855_init(&SPI_CS_PORT,&SPI_CS_DDR,(_BV(SPI_CS1) | _BV(SPI_CS2)));
 	
-	/* Initialize parallel interface to rocket controller */
-	parallel_init();
-	
 	/* The following will be executed indefinitely */
 	while(1){
 		
 		/* Acquire one sample from each sensor IC */
-		uint32_t result_tc_1 = max31855_get(&PORTC,_BV(SPI_CS1));
-		uint32_t result_tc_2 = max31855_get(&PORTC,_BV(SPI_CS2));
+		uint32_t result_tc_1 = max31855_get(&SPI_CS_PORT,_BV(SPI_CS1));
+		uint32_t result_tc_2 = max31855_get(&SPI_CS_PORT,_BV(SPI_CS2));
 		
 		/* 42 42 are sync words for transmitted data */
 		uint8_t byteArray[] = {

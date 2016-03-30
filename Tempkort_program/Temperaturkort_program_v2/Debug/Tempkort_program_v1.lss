@@ -15,19 +15,19 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   5 .debug_aranges 000000c8  00000000  00000000  000003d8  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   00000879  00000000  00000000  000004a0  2**0
+  6 .debug_info   00000871  00000000  00000000  000004a0  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000472  00000000  00000000  00000d19  2**0
+  7 .debug_abbrev 00000483  00000000  00000000  00000d11  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   000006a8  00000000  00000000  0000118b  2**0
+  8 .debug_line   000006a8  00000000  00000000  00001194  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  000001a0  00000000  00000000  00001834  2**2
+  9 .debug_frame  000001a0  00000000  00000000  0000183c  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000003f7  00000000  00000000  000019d4  2**0
+ 10 .debug_str    0000045b  00000000  00000000  000019dc  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00000724  00000000  00000000  00001dcb  2**0
+ 11 .debug_loc    00000724  00000000  00000000  00001e37  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 000000a0  00000000  00000000  000024ef  2**0
+ 12 .debug_ranges 000000a0  00000000  00000000  0000255b  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -266,40 +266,42 @@ int main(void){
  11e:	de bf       	out	0x3e, r29	; 62
  120:	0f be       	out	0x3f, r0	; 63
  122:	cd bf       	out	0x3d, r28	; 61
+	
+	/* Initialize parallel interface to rocket controller */
+	/* This needs to be done early to avoid drawing excessive current through
+	the internal protection zeners, due to the 100k pullups to 5V */
+	parallel_init();
+ 124:	2b d0       	rcall	.+86     	; 0x17c <parallel_init>
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
- 124:	2f ef       	ldi	r18, 0xFF	; 255
- 126:	84 e3       	ldi	r24, 0x34	; 52
- 128:	9c e0       	ldi	r25, 0x0C	; 12
- 12a:	21 50       	subi	r18, 0x01	; 1
- 12c:	80 40       	sbci	r24, 0x00	; 0
- 12e:	90 40       	sbci	r25, 0x00	; 0
- 130:	e1 f7       	brne	.-8      	; 0x12a <main+0x1a>
- 132:	00 c0       	rjmp	.+0      	; 0x134 <main+0x24>
- 134:	00 00       	nop
-	
+ 126:	2f e9       	ldi	r18, 0x9F	; 159
+ 128:	86 e8       	ldi	r24, 0x86	; 134
+ 12a:	91 e0       	ldi	r25, 0x01	; 1
+ 12c:	21 50       	subi	r18, 0x01	; 1
+ 12e:	80 40       	sbci	r24, 0x00	; 0
+ 130:	90 40       	sbci	r25, 0x00	; 0
+ 132:	e1 f7       	brne	.-8      	; 0x12c <main+0x1c>
+ 134:	00 c0       	rjmp	.+0      	; 0x136 <main+0x26>
+ 136:	00 00       	nop
+		
 	/* Allow voltages to stabilize in addition to warm-up time */
 	_delay_ms(500);
 	
 	/* Initialize thermocouple interface library */
 	max31855_init(&SPI_CS_PORT,&SPI_CS_DDR,(_BV(SPI_CS1) | _BV(SPI_CS2)));
- 136:	43 e0       	ldi	r20, 0x03	; 3
- 138:	67 e2       	ldi	r22, 0x27	; 39
- 13a:	70 e0       	ldi	r23, 0x00	; 0
- 13c:	88 e2       	ldi	r24, 0x28	; 40
- 13e:	90 e0       	ldi	r25, 0x00	; 0
- 140:	a4 df       	rcall	.-184    	; 0x8a <max31855_init>
-	
-	/* Initialize parallel interface to rocket controller */
-	parallel_init();
- 142:	1c d0       	rcall	.+56     	; 0x17c <parallel_init>
+ 138:	43 e0       	ldi	r20, 0x03	; 3
+ 13a:	67 e2       	ldi	r22, 0x27	; 39
+ 13c:	70 e0       	ldi	r23, 0x00	; 0
+ 13e:	88 e2       	ldi	r24, 0x28	; 40
+ 140:	90 e0       	ldi	r25, 0x00	; 0
+ 142:	a3 df       	rcall	.-186    	; 0x8a <max31855_init>
 		/* Acquire one sample from each sensor IC */
-		uint32_t result_tc_1 = max31855_get(&PORTC,_BV(SPI_CS1));
-		uint32_t result_tc_2 = max31855_get(&PORTC,_BV(SPI_CS2));
+		uint32_t result_tc_1 = max31855_get(&SPI_CS_PORT,_BV(SPI_CS1));
+		uint32_t result_tc_2 = max31855_get(&SPI_CS_PORT,_BV(SPI_CS2));
 		
 		/* 42 42 are sync words for transmitted data */
 		uint8_t byteArray[] = {
@@ -309,7 +311,7 @@ int main(void){
 	while(1){
 		
 		/* Acquire one sample from each sensor IC */
-		uint32_t result_tc_1 = max31855_get(&PORTC,_BV(SPI_CS1));
+		uint32_t result_tc_1 = max31855_get(&SPI_CS_PORT,_BV(SPI_CS1));
  146:	61 e0       	ldi	r22, 0x01	; 1
  148:	88 e2       	ldi	r24, 0x28	; 40
  14a:	90 e0       	ldi	r25, 0x00	; 0
@@ -318,7 +320,7 @@ int main(void){
  150:	f7 2e       	mov	r15, r23
  152:	e8 2e       	mov	r14, r24
  154:	d9 2e       	mov	r13, r25
-		uint32_t result_tc_2 = max31855_get(&PORTC,_BV(SPI_CS2));
+		uint32_t result_tc_2 = max31855_get(&SPI_CS_PORT,_BV(SPI_CS2));
  156:	62 e0       	ldi	r22, 0x02	; 2
  158:	88 e2       	ldi	r24, 0x28	; 40
  15a:	90 e0       	ldi	r25, 0x00	; 0
@@ -351,47 +353,24 @@ int main(void){
  17a:	e5 cf       	rjmp	.-54     	; 0x146 <main+0x36>
 
 0000017c <parallel_init>:
-#include "parallel.h"
-
-
-
-void parallel_init(void){
-	FRSYNC1_DDR &= ~(_BV(FRAMESYNC_1));	// Set FRAMESYNC1 pin as input...
  17c:	3d 98       	cbi	0x07, 5	; 7
-	FRSYNC1_PORT &= ~(_BV(FRAMESYNC_1));	// ... without internal pullup
  17e:	45 98       	cbi	0x08, 5	; 8
-	FRSYNC2_DDR &= ~(_BV(FRAMESYNC_2));	// Set FRAMESYNC2 pin as input...
  180:	21 98       	cbi	0x04, 1	; 4
-	FRSYNC2_PORT &= ~(_BV(FRAMESYNC_2));	// ... without internal pullup
  182:	29 98       	cbi	0x05, 1	; 5
-	
-	DDRD = 0xFF;	// All data pins outputs
  184:	8f ef       	ldi	r24, 0xFF	; 255
  186:	8a b9       	out	0x0a, r24	; 10
-	PORTD = 0x00;	// Initial state of data pins 0x00
  188:	1b b8       	out	0x0b, r1	; 11
  18a:	08 95       	ret
 
 0000018c <parallel_putc>:
-}
-
-void parallel_putc(uint8_t byte){
  18c:	48 2f       	mov	r20, r24
  18e:	41 72       	andi	r20, 0x21	; 33
-	/* The data pins are not mapped linearly, therefore a conversion is required */
-	uint8_t data7 = (byte & _BV(7)) >> 3;
-	uint8_t data6 = (byte & _BV(6)) >> 3;
-	uint8_t data5 = (byte & _BV(5)) >> 0;
-	uint8_t data4 = (byte & _BV(4)) >> 2;
-	uint8_t data3 = (byte & _BV(3)) << 3;	// Notice: Left shift
  190:	28 2f       	mov	r18, r24
  192:	28 70       	andi	r18, 0x08	; 8
  194:	22 0f       	add	r18, r18
  196:	22 0f       	add	r18, r18
  198:	22 0f       	add	r18, r18
  19a:	24 2b       	or	r18, r20
-	uint8_t data2 = (byte & _BV(2)) >> 1;
-	uint8_t data1 = (byte & _BV(1)) << 6;	// Notice: Left shift
  19c:	98 2f       	mov	r25, r24
  19e:	92 70       	andi	r25, 0x02	; 2
  1a0:	92 95       	swap	r25
@@ -399,12 +378,6 @@ void parallel_putc(uint8_t byte){
  1a4:	99 0f       	add	r25, r25
  1a6:	90 7c       	andi	r25, 0xC0	; 192
  1a8:	29 2b       	or	r18, r25
-	PORTD = 0x00;	// Initial state of data pins 0x00
-}
-
-void parallel_putc(uint8_t byte){
-	/* The data pins are not mapped linearly, therefore a conversion is required */
-	uint8_t data7 = (byte & _BV(7)) >> 3;
  1aa:	98 2f       	mov	r25, r24
  1ac:	90 78       	andi	r25, 0x80	; 128
  1ae:	49 2f       	mov	r20, r25
@@ -416,7 +389,6 @@ void parallel_putc(uint8_t byte){
  1ba:	55 95       	asr	r21
  1bc:	47 95       	ror	r20
  1be:	24 2b       	or	r18, r20
-	uint8_t data6 = (byte & _BV(6)) >> 3;
  1c0:	98 2f       	mov	r25, r24
  1c2:	90 74       	andi	r25, 0x40	; 64
  1c4:	69 2f       	mov	r22, r25
@@ -428,8 +400,6 @@ void parallel_putc(uint8_t byte){
  1d0:	75 95       	asr	r23
  1d2:	67 95       	ror	r22
  1d4:	26 2b       	or	r18, r22
-	uint8_t data5 = (byte & _BV(5)) >> 0;
-	uint8_t data4 = (byte & _BV(4)) >> 2;
  1d6:	98 2f       	mov	r25, r24
  1d8:	90 71       	andi	r25, 0x10	; 16
  1da:	49 2f       	mov	r20, r25
@@ -439,47 +409,31 @@ void parallel_putc(uint8_t byte){
  1e2:	55 95       	asr	r21
  1e4:	47 95       	ror	r20
  1e6:	24 2b       	or	r18, r20
-	uint8_t data3 = (byte & _BV(3)) << 3;	// Notice: Left shift
-	uint8_t data2 = (byte & _BV(2)) >> 1;
  1e8:	84 70       	andi	r24, 0x04	; 4
  1ea:	90 e0       	ldi	r25, 0x00	; 0
  1ec:	95 95       	asr	r25
  1ee:	87 95       	ror	r24
-	uint8_t data1 = (byte & _BV(1)) << 6;	// Notice: Left shift
-	uint8_t data0 = (byte & _BV(0)) >> 0;
-	
-	uint8_t byteConverted = data7 | data6 | data5 | data4 | data3 | data2 | data1 | data0;	// Combine to one byte
  1f0:	28 2b       	or	r18, r24
-	
-	while(!((FRSYNC1_PIN & _BV(FRAMESYNC_1)) | (FRSYNC2_PIN & _BV(FRAMESYNC_2))));	// Wait for logic high on FrameSync lines
  1f2:	86 b1       	in	r24, 0x06	; 6
  1f4:	93 b1       	in	r25, 0x03	; 3
  1f6:	92 70       	andi	r25, 0x02	; 2
  1f8:	80 72       	andi	r24, 0x20	; 32
  1fa:	89 2b       	or	r24, r25
  1fc:	d1 f3       	breq	.-12     	; 0x1f2 <parallel_putc+0x66>
-	
-	PORTD = byteConverted;	// Put data on data lines
  1fe:	2b b9       	out	0x0b, r18	; 11
-	
-	while((FRSYNC1_PIN & _BV(FRAMESYNC_1)) | (FRSYNC2_PIN & _BV(FRAMESYNC_2)));	// Wait for logic low on FrameSync lines
  200:	86 b1       	in	r24, 0x06	; 6
  202:	93 b1       	in	r25, 0x03	; 3
  204:	92 70       	andi	r25, 0x02	; 2
  206:	80 72       	andi	r24, 0x20	; 32
  208:	89 2b       	or	r24, r25
  20a:	d1 f7       	brne	.-12     	; 0x200 <parallel_putc+0x74>
-}
  20c:	08 95       	ret
 
 0000020e <parallel_puts>:
-
-void parallel_puts(volatile uint8_t data[], uint8_t length){
  20e:	0f 93       	push	r16
  210:	1f 93       	push	r17
  212:	cf 93       	push	r28
  214:	df 93       	push	r29
-	for (uint8_t i = 0; i < length; ++i){
  216:	66 23       	and	r22, r22
  218:	69 f0       	breq	.+26     	; 0x234 <parallel_puts+0x26>
  21a:	ec 01       	movw	r28, r24
@@ -490,20 +444,11 @@ void parallel_puts(volatile uint8_t data[], uint8_t length){
  224:	1f 4f       	sbci	r17, 0xFF	; 255
  226:	08 0f       	add	r16, r24
  228:	19 1f       	adc	r17, r25
-		parallel_putc(data[i]);
  22a:	89 91       	ld	r24, Y+
  22c:	af df       	rcall	.-162    	; 0x18c <parallel_putc>
-	
-	while((FRSYNC1_PIN & _BV(FRAMESYNC_1)) | (FRSYNC2_PIN & _BV(FRAMESYNC_2)));	// Wait for logic low on FrameSync lines
-}
-
-void parallel_puts(volatile uint8_t data[], uint8_t length){
-	for (uint8_t i = 0; i < length; ++i){
  22e:	c0 17       	cp	r28, r16
  230:	d1 07       	cpc	r29, r17
  232:	d9 f7       	brne	.-10     	; 0x22a <parallel_puts+0x1c>
-		parallel_putc(data[i]);
-	}
  234:	df 91       	pop	r29
  236:	cf 91       	pop	r28
  238:	1f 91       	pop	r17
@@ -511,12 +456,6 @@ void parallel_puts(volatile uint8_t data[], uint8_t length){
  23c:	08 95       	ret
 
 0000023e <__vector_18>:
-ISR (UART0_RECEIVE_INTERRUPT)	
-/*************************************************************************
-Function: UART Receive Complete interrupt
-Purpose:  called when the UART has received a character
-**************************************************************************/
-{
  23e:	1f 92       	push	r1
  240:	0f 92       	push	r0
  242:	0f b6       	in	r0, 0x3f	; 63
@@ -527,66 +466,25 @@ Purpose:  called when the UART has received a character
  24c:	9f 93       	push	r25
  24e:	ef 93       	push	r30
  250:	ff 93       	push	r31
-    unsigned char usr;
-    unsigned char lastRxError;
- 
- 
-    /* read UART status register and UART data register */
-    usr  = UART0_STATUS;
  252:	80 91 c0 00 	lds	r24, 0x00C0
-    data = UART0_DATA;
  256:	20 91 c6 00 	lds	r18, 0x00C6
-    
-    /* get FEn (Frame Error) DORn (Data OverRun) UPEn (USART Parity Error) bits */
-#if defined(FE) && defined(DOR) && defined(UPE)
-    lastRxError = usr & (_BV(FE)|_BV(DOR)|_BV(UPE) );
-#elif defined(FE0) && defined(DOR0) && defined(UPE0)
-    lastRxError = usr & (_BV(FE0)|_BV(DOR0)|_BV(UPE0) );
  25a:	8c 71       	andi	r24, 0x1C	; 28
-#elif defined(FE) && defined(DOR)
-    lastRxError = usr & (_BV(FE)|_BV(DOR) );
-#endif
-
-    /* calculate buffer index */ 
-    tmphead = ( UART_RxHead + 1) & UART_RX_BUFFER_MASK;
  25c:	e0 91 02 01 	lds	r30, 0x0102
  260:	ef 5f       	subi	r30, 0xFF	; 255
  262:	ef 71       	andi	r30, 0x1F	; 31
-    
-    if ( tmphead == UART_RxTail ) {
  264:	90 91 01 01 	lds	r25, 0x0101
  268:	e9 17       	cp	r30, r25
  26a:	39 f0       	breq	.+14     	; 0x27a <__vector_18+0x3c>
-        /* error: receive buffer overflow */
-        lastRxError = UART_BUFFER_OVERFLOW >> 8;
-    }else{
-        /* store new index */
-        UART_RxHead = tmphead;
  26c:	e0 93 02 01 	sts	0x0102, r30
-        /* store received data in buffer */
-        UART_RxBuf[tmphead] = data;
  270:	f0 e0       	ldi	r31, 0x00	; 0
  272:	eb 5f       	subi	r30, 0xFB	; 251
  274:	fe 4f       	sbci	r31, 0xFE	; 254
  276:	20 83       	st	Z, r18
  278:	01 c0       	rjmp	.+2      	; 0x27c <__vector_18+0x3e>
-    /* calculate buffer index */ 
-    tmphead = ( UART_RxHead + 1) & UART_RX_BUFFER_MASK;
-    
-    if ( tmphead == UART_RxTail ) {
-        /* error: receive buffer overflow */
-        lastRxError = UART_BUFFER_OVERFLOW >> 8;
  27a:	82 e0       	ldi	r24, 0x02	; 2
-        /* store new index */
-        UART_RxHead = tmphead;
-        /* store received data in buffer */
-        UART_RxBuf[tmphead] = data;
-    }
-    UART_LastRxError |= lastRxError;   
  27c:	90 91 00 01 	lds	r25, 0x0100
  280:	89 2b       	or	r24, r25
  282:	80 93 00 01 	sts	0x0100, r24
-}
  286:	ff 91       	pop	r31
  288:	ef 91       	pop	r30
  28a:	9f 91       	pop	r25
@@ -599,12 +497,6 @@ Purpose:  called when the UART has received a character
  298:	18 95       	reti
 
 0000029a <__vector_19>:
-ISR (UART0_TRANSMIT_INTERRUPT)
-/*************************************************************************
-Function: UART Data Register Empty interrupt
-Purpose:  called when the UART is ready to transmit the next byte
-**************************************************************************/
-{
  29a:	1f 92       	push	r1
  29c:	0f 92       	push	r0
  29e:	0f b6       	in	r0, 0x3f	; 63
@@ -614,39 +506,25 @@ Purpose:  called when the UART is ready to transmit the next byte
  2a6:	9f 93       	push	r25
  2a8:	ef 93       	push	r30
  2aa:	ff 93       	push	r31
-    unsigned char tmptail;
-
-    
-    if ( UART_TxHead != UART_TxTail) {
  2ac:	90 91 04 01 	lds	r25, 0x0104
  2b0:	80 91 03 01 	lds	r24, 0x0103
  2b4:	98 17       	cp	r25, r24
  2b6:	69 f0       	breq	.+26     	; 0x2d2 <__vector_19+0x38>
-        /* calculate and store new buffer index */
-        tmptail = (UART_TxTail + 1) & UART_TX_BUFFER_MASK;
  2b8:	e0 91 03 01 	lds	r30, 0x0103
  2bc:	ef 5f       	subi	r30, 0xFF	; 255
  2be:	ef 71       	andi	r30, 0x1F	; 31
-        UART_TxTail = tmptail;
  2c0:	e0 93 03 01 	sts	0x0103, r30
-        /* get one byte from buffer and write it to UART */
-        UART0_DATA = UART_TxBuf[tmptail];  /* start transmission */
  2c4:	f0 e0       	ldi	r31, 0x00	; 0
  2c6:	eb 5d       	subi	r30, 0xDB	; 219
  2c8:	fe 4f       	sbci	r31, 0xFE	; 254
  2ca:	80 81       	ld	r24, Z
  2cc:	80 93 c6 00 	sts	0x00C6, r24
  2d0:	05 c0       	rjmp	.+10     	; 0x2dc <__vector_19+0x42>
-    }else{
-        /* tx buffer empty, disable UDRE interrupt */
-        UART0_CONTROL &= ~_BV(UART0_UDRIE);
  2d2:	e1 ec       	ldi	r30, 0xC1	; 193
  2d4:	f0 e0       	ldi	r31, 0x00	; 0
  2d6:	80 81       	ld	r24, Z
  2d8:	8f 7d       	andi	r24, 0xDF	; 223
  2da:	80 83       	st	Z, r24
-    }
-}
  2dc:	ff 91       	pop	r31
  2de:	ef 91       	pop	r30
  2e0:	9f 91       	pop	r25
