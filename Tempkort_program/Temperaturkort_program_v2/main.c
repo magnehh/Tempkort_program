@@ -1,57 +1,81 @@
-/*
- * Tempkort_program_v1.cpp
- *
- * Created: 09.03.2016 17.37.07
- * Author : SpaceY
- */ 
+/*************************************************************************
+Title:    Temperature relay application for NAROM student rocket
+Author:   Magne Haneberg <magnehh |at| stud |.| ntnu |.| no>
+Software: AVR-GCC 4.x
+Hardware: ATmega48, ATmega88, ATmega168, ATmega328 
+License:  GNU General Public License 
+          
+DESCRIPTION:
+    This application acquires temperature samples from MAX31855 chips
+	and relays it to a rocket controller.
+                    
+LICENSE:
+    Copyright (C) 2016 Magne Haneberg, GNU General Public License Version 3
 
-#define F_CPU 8000000UL	// Debugging only!
-#define UART_BAUD_RATE 9600	// Debugging only!
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+                        
+*************************************************************************/
+
+#define F_CPU 8000000UL
 
 #include <avr/io.h>
 #include <util/delay.h>
-#include <avr/interrupt.h>	// Debugging only!
-#include <stdlib.h>
-#include "uart.h"	// Debugging only!
 #include "max31855.h"
+#include "parallel.h"
 
-// #define SPI_DDR_CS DDRC
-// #define SPI_PORT_CS PORTC
+#define SPI_CS_DDR DDRC
+#define SPI_CS_PORT PORTC
 #define SPI_CS1 PC0
 #define SPI_CS2 PC1
 
 int main(void){
 	
-	/* Initialize serial port (debugging only!) */
-	uart_init( UART_BAUD_SELECT(UART_BAUD_RATE,F_CPU) );
+	/* Allow voltages to stabilize in addition to warm-up time */
+	_delay_ms(500);
 	
 	/* Initialize thermocouple interface library */
-	max31855_init(&PORTC,&DDRC,(_BV(SPI_CS1) | _BV(SPI_CS2)));
+	max31855_init(&SPI_CS_PORT,&SPI_CS_DDR,(_BV(SPI_CS1) | _BV(SPI_CS2)));
 	
-	/* Interrupts required for UART operation (debugging only!) */
-	sei();
+	/* Initialize parallel interface to rocket controller */
+	parallel_init();
 	
+	/* The following will be executed indefinitely */
 	while(1){
-		/* Circular buffer needed for UART string transmission (debugging only!) */
-		char buffer[7];
 		
+		/* Acquire one sample from each sensor IC */
+		uint32_t result_tc_1 = max31855_get(&PORTC,_BV(SPI_CS1));
+		uint32_t result_tc_2 = max31855_get(&PORTC,_BV(SPI_CS2));
 		
-		/* Acquire one sample from sensor IC */
-		uint32_t result = max31855_get(&PORTC,_BV(SPI_CS2));
+		/* 42 42 are sync words for transmitted data */
+		uint8_t byteArray[] = {
+			0x42,
+			0x42,
+			result_tc_1 >> 24,
+			result_tc_1 >> 16,
+			result_tc_1 >> 8,
+			result_tc_1,
+			result_tc_2 >> 24,
+			result_tc_2 >> 16,
+			result_tc_2 >> 8,
+			result_tc_2
+		};
 		
+		/* This function writes a given number of bytes to the rocket controller */
+		parallel_puts(byteArray,10);
 		
-		/* Mask out only what we want to send */
-		uint32_t mask = 0xFFF00000;
-		uint32_t masked_result = result & mask;
-		uint16_t send_this = (masked_result >> 20);
-		
-		
-		/* Transmit temperature through UART */
-		uart_puts(ltoa(send_this,buffer,10));
-		uart_putc('\n');
-		uart_putc('\r');
-		
-		/* Wait, in order not to overrun debug output */
-		_delay_ms(100);
 	}
 }
+
+
+// 		/* Mask out only what we want to send */
+// 		uint32_t mask = 0xFFF00000;
+// 		uint32_t masked_result = result & mask;
+// 		uint16_t send_this = (masked_result >> 20);

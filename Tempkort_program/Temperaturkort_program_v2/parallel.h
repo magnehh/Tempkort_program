@@ -1,15 +1,16 @@
-#ifndef MAX31855_H
-#define MAX31855_H
+#ifndef PARALLEL_H
+#define PARALLEL_H
 
 /*************************************************************************
-Title:    MAX31855 SPI library
+Title:    Application-specific library for parallel communication
 Author:   Magne Haneberg <magnehh |at| stud |.| ntnu |.| no>
 Software: AVR-GCC 4.x
 Hardware: ATmega48, ATmega88, ATmega168, ATmega328 
 License:  GNU General Public License 
           
 DESCRIPTION:
-    The entire string of bytes made available by the MAX31855 is read and returned to the caller as a 32bit word.
+    This library handles the parallel communication to the NAROM student rocket main control board.
+	It is intended for use in only this specific application.
                     
 LICENSE:
     Copyright (C) 2016 Magne Haneberg, GNU General Public License Version 3
@@ -30,9 +31,9 @@ LICENSE:
 
 /** 
  *  @file
- *  @code #include <max31855.h> @endcode
+ *  @code #include <parallel.h> @endcode
  * 
- *  @brief MAX31855 SPI library
+ *  @brief Parallel comm library
  *
  *  @author Magne Haneberg <magnehh |at| stud |.| ntnu |.| no>
  *  @copyright (C) 2016 Magne Haneberg, GNU General Public License Version 3
@@ -41,22 +42,26 @@ LICENSE:
 
 
 /** @brief  Initializing function
- *  @param  spi_cs_port The port where chip select lines are located
- *  @param  spi_cs_ddr Data direction register of chip select lines
- *	@param	spi_cs_pin_mask Mask of pins to be used as chip select lines
  *	@return	none
  */
-void max31855_init(volatile uint8_t *spi_cs_port, volatile uint8_t *spi_cs_ddr, uint8_t spi_cs_pin_mask);
+void parallel_init(void);
 
 
 
-/** @brief  Function to read the entire string of four bytes presented by the MAX31855
- *  @param  spi_cs_port The port where chip select lines are located
- *	@param	spi_cs_pin Pin connected to desired chip select line
- *	@return 32bit word received from MAX31855
+/** @brief  Function to write one byte to data lines
+ *  @param  char Data to be written
  */
-uint32_t max31855_get(volatile uint8_t *spi_cs_port, uint8_t spi_cs_pin);
+void parallel_putc(uint8_t data);
 
 
 
-#endif /* MAX31855_H */
+/** @brief  Function to write a string of bytes to data lines
+ *  @param  string Data to be written
+ *  @param  length Length of string
+ */
+void parallel_puts(volatile uint8_t string[],uint8_t length);
+
+
+
+
+#endif /* PARALLEL_H */
