@@ -63,5 +63,11 @@ void parallel_puts(volatile uint8_t string[],uint8_t length);
 
 
 
+/** @brief	Function to write one byte to data lines without waiting for Framesync signal
+ *	@param	byte Data to be written
+ */
+void parallel_force(uint8_t byte);
+
+
 
 #endif /* PARALLEL_H */

@@ -75,9 +75,3 @@ int main(void){
 		
 	}
 }
-
-
-// 		/* Mask out only what we want to send */
-// 		uint32_t mask = 0xFFF00000;
-// 		uint32_t masked_result = result & mask;
-// 		uint16_t send_this = (masked_result >> 20);

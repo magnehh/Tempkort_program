@@ -41,24 +41,24 @@ defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__)
 	#define SPI_SS PB2
 #endif
 
-#include <avr/io.h>
-#include <util/delay_basic.h>
-#include <inttypes.h>
+#include <avr/io.h>		// Device-specific register definitions
+#include <util/delay_basic.h>	// Used for settling delays
+#include <inttypes.h>	// ??? not used ???
 
 void max31855_init(volatile uint8_t *spi_cs_port, volatile uint8_t *spi_cs_ddr, uint8_t spi_cs_pin_mask){
 	/* Set SPI pins as input/output as desired */
-	SPI_DDR |= _BV(SPI_SCK) | _BV(SPI_MOSI) | _BV(SPI_SS);
-	SPI_DDR &= ~(_BV(SPI_MISO));
-	SPI_PORT |= _BV(SPI_SS);
+	SPI_DDR |= _BV(SPI_SCK) | _BV(SPI_MOSI) | _BV(SPI_SS);	// SCK, MOSI and SS pins are outputs
+	SPI_DDR &= ~(_BV(SPI_MISO));	// MISO pin is an input
+	SPI_PORT |= _BV(SPI_SS);	// SS pin needs to be high at all times during Master operation. See Atmel datasheet for more details.
 	
 	/* Set chip select lines as outputs */
 	*spi_cs_ddr |= spi_cs_pin_mask;
 	
 	/* Set chip select lines high */
-	*spi_cs_port |= spi_cs_pin_mask;	// Set Chip Select lines high
+	*spi_cs_port |= spi_cs_pin_mask;
 
 	/* Enable SPI in hardware */
-	SPI_SPCR = _BV(SPI_SPE) | _BV(SPI_MSTR);
+	SPI_SPCR = _BV(SPI_SPE) | _BV(SPI_MSTR);	// SPI Enable and SPI Master Mode
 }
 
 
@@ -66,14 +66,14 @@ uint32_t max31855_get(volatile uint8_t *spi_cs_port, uint8_t spi_cs_pin){
 	/* Set chip select line of selected slave low */
 	*spi_cs_port &= ~(spi_cs_pin);
 	/* Allow for some settling delay */
-	_delay_loop_1(5);
+	_delay_loop_1(5);	// Execute assembly NOP (no operation) 5 times
 	
-	/* Write one byte to SPI data register to initiate reception */
+	/* Write one byte to SPI Data Register to initiate reception */
 	SPI_SPDR = 0x00;
 	/* Wait while transfer not finished */
-	while(!(SPI_SPSR & (1<<SPI_SPIF)));
+	while(!(SPI_SPSR & (1<<SPI_SPIF)));	// Polls SPI Status Register for SPI Interrupt flag indefinitely until flag is set
 	/* Read back received byte from SPI data register */
-	uint8_t max_part_1 = SPI_SPDR;
+	uint8_t max_part_1 = SPI_SPDR;	// Each part is saved in its own 8bit variable
 	
 	/* Receive three more bytes */
 	SPI_SPDR = 0x00;
@@ -92,10 +92,10 @@ uint32_t max31855_get(volatile uint8_t *spi_cs_port, uint8_t spi_cs_pin){
 	*spi_cs_port |= spi_cs_pin;
 	
 	/* Arrange the four received bytes into a 32bit word */
-	uint32_t result = max_part_1;
-	result = (result << 8) | max_part_2;
-	result = (result << 8) | max_part_3;
-	result = (result << 8) | max_part_4;
+	uint32_t result = max_part_1;	// Copy the first 8 bits
+	result = (result << 8) | max_part_2;	// Shift 8 bits leftward and copy the next 8 bits
+	result = (result << 8) | max_part_3;	// Repeat
+	result = (result << 8) | max_part_4;	// Repeat
 	
 	/* Return 32bit word */
 	return result;

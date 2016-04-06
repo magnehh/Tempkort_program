@@ -18,6 +18,8 @@ Discarded input sections
  .text          0x00000000        0x0 parallel.o
  .data          0x00000000        0x0 parallel.o
  .bss           0x00000000        0x0 parallel.o
+ .text.parallel_force
+                0x00000000       0x70 parallel.o
  .text          0x00000000        0x0 uart.o
  .data          0x00000000        0x0 uart.o
  .bss           0x00000000        0x0 uart.o
@@ -421,65 +423,65 @@ END GROUP
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000       0xc8
+.debug_aranges  0x00000000       0xd0
  *(.debug_aranges)
  .debug_aranges
                 0x00000000       0x28 max31855.o
  .debug_aranges
                 0x00000028       0x20 main.o
  .debug_aranges
-                0x00000048       0x30 parallel.o
+                0x00000048       0x38 parallel.o
  .debug_aranges
-                0x00000078       0x50 uart.o
+                0x00000080       0x50 uart.o
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000      0x871
+.debug_info     0x00000000      0x91c
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x17a max31855.o
  .debug_info    0x0000017a      0x255 main.o
- .debug_info    0x000003cf      0x196 parallel.o
- .debug_info    0x00000565      0x30c uart.o
+ .debug_info    0x000003cf      0x241 parallel.o
+ .debug_info    0x00000610      0x30c uart.o
 
-.debug_abbrev   0x00000000      0x483
+.debug_abbrev   0x00000000      0x49b
  *(.debug_abbrev)
  .debug_abbrev  0x00000000       0xfc max31855.o
  .debug_abbrev  0x000000fc      0x191 main.o
- .debug_abbrev  0x0000028d       0xe5 parallel.o
- .debug_abbrev  0x00000372      0x111 uart.o
+ .debug_abbrev  0x0000028d       0xfd parallel.o
+ .debug_abbrev  0x0000038a      0x111 uart.o
 
-.debug_line     0x00000000      0x6a8
+.debug_line     0x00000000      0x6e9
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x1c6 max31855.o
  .debug_line    0x000001c6      0x16d main.o
- .debug_line    0x00000333      0x14f parallel.o
- .debug_line    0x00000482      0x226 uart.o
+ .debug_line    0x00000333      0x190 parallel.o
+ .debug_line    0x000004c3      0x226 uart.o
 
-.debug_frame    0x00000000      0x1a0
+.debug_frame    0x00000000      0x1b0
  *(.debug_frame)
  .debug_frame   0x00000000       0x34 max31855.o
  .debug_frame   0x00000034       0x34 main.o
- .debug_frame   0x00000068       0x58 parallel.o
- .debug_frame   0x000000c0       0xe0 uart.o
+ .debug_frame   0x00000068       0x68 parallel.o
+ .debug_frame   0x000000d0       0xe0 uart.o
 
-.debug_str      0x00000000      0x45b
+.debug_str      0x00000000      0x46a
  *(.debug_str)
  .debug_str     0x00000000      0x1f8 max31855.o
                                 0x233 (size before relaxing)
  .debug_str     0x000001f8       0x9a main.o
                                 0x242 (size before relaxing)
- .debug_str     0x00000292       0xd0 parallel.o
-                                0x20c (size before relaxing)
- .debug_str     0x00000362       0xf9 uart.o
+ .debug_str     0x00000292       0x7c parallel.o
+                                0x21c (size before relaxing)
+ .debug_str     0x0000030e      0x15c uart.o
                                 0x28f (size before relaxing)
 
-.debug_loc      0x00000000      0x724
+.debug_loc      0x00000000      0x8b7
  *(.debug_loc)
  .debug_loc     0x00000000       0xef max31855.o
  .debug_loc     0x000000ef       0x94 main.o
- .debug_loc     0x00000183      0x27a parallel.o
- .debug_loc     0x000003fd      0x327 uart.o
+ .debug_loc     0x00000183      0x40d parallel.o
+ .debug_loc     0x00000590      0x327 uart.o
 
 .debug_macinfo
  *(.debug_macinfo)
@@ -499,12 +501,12 @@ END GROUP
 .debug_pubtypes
  *(.debug_pubtypes)
 
-.debug_ranges   0x00000000       0xa0
+.debug_ranges   0x00000000       0xa8
  *(.debug_ranges)
  .debug_ranges  0x00000000       0x18 max31855.o
  .debug_ranges  0x00000018       0x10 main.o
- .debug_ranges  0x00000028       0x20 parallel.o
- .debug_ranges  0x00000048       0x58 uart.o
+ .debug_ranges  0x00000028       0x28 parallel.o
+ .debug_ranges  0x00000050       0x58 uart.o
 
 .debug_macro
  *(.debug_macro)
